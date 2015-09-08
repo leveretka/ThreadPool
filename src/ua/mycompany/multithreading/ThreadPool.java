@@ -1,4 +1,4 @@
-package ua.epam.rd.multithreading;
+package ua.mycompany.multithreading;
 
 import java.util.LinkedList;
 import java.util.Queue;
