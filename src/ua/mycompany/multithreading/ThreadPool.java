@@ -9,6 +9,8 @@ import java.util.Queue;
 public class ThreadPool {
 
     private Queue<Runnable> tasks;
+    private boolean started = false;
+
 
     private Queue<Executor> executors;
 
@@ -18,7 +20,6 @@ public class ThreadPool {
         for (int i = 0; i < n; ++i) {
             executors.add(new Executor());
         }
-        startPool();
     }
 
     public void startPool() {
@@ -42,6 +43,10 @@ public class ThreadPool {
 
 
     public void submit(Runnable c) {
+        if (!started) {
+            startPool();
+            started = true;
+        }
         synchronized(tasks) {
             tasks.add(c);
             tasks.notifyAll();
@@ -50,9 +55,6 @@ public class ThreadPool {
 
     private class Executor extends Thread {
 
-//        {
-//            this.setDaemon(true);
-//        }
         @Override
         public void run() {
             while (!isInterrupted()) {
@@ -76,7 +78,8 @@ public class ThreadPool {
                 @Override
                 public void run() {
                     for (int i = 0; i < 10; ++i) {
-                        System.out.println("Task #" + k);
+                        final int ii = i;
+                        System.out.println("Task #" + k + ii);
                         try {
                             Thread.sleep(100);
                         } catch (InterruptedException e) {
